@@ -4,6 +4,9 @@ import CardList from './components/card-list/card-list.component'
 import SearchBox from './components/search-box/search-box.component';
 import './App.css';
 
+const monstersImgs = ["https://robohash.org/", "?set=set2"]
+//https://robohash.org/1?set=set2
+
 class App extends Component {
 
   constructor() {
@@ -17,9 +20,13 @@ class App extends Component {
   componentDidMount() {
     fetch('https://jsonplaceholder.typicode.com/users')
     .then((response) => response.json())
-    .then((users) => this.setState(() => {
-      return {monsters : users}
-    }));
+    .then((users) => {
+      const objs = users.map((usuario, index) => ({
+        ...usuario,
+        image : `${monstersImgs[0]}${index}${monstersImgs[1]}` 
+      }))
+      this.setState({monsters : objs})
+    });
   }
 
   onSearchChange = (event) => {
@@ -36,9 +43,12 @@ class App extends Component {
     const filteredMonsters = monsters.filter((monster) => {
       return monster.name.toLocaleLowerCase().includes(searchField);
     });
-
+    console.log(monsters);
     return (
+      
       <div className="App">
+        <h1 className='app-title'>Monsters</h1>
+
         <SearchBox 
           boxClassName='monster'
           placeHolderText='Enter monster name...'
